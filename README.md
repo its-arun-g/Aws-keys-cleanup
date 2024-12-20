@@ -35,13 +35,13 @@ A Python script to cleanup AWS access keys and IAM users
 
 ### To disable AWS access keys
 ```bash
-python3 main.py --object key --action disable --file key_list.txt --threads 20 
+python3 main.py --object key --action disable --file key_list.txt --threads 10 
 ```
 ### To delete AWS access keys
 ```bash
-python3 main.py --object key --action delete --file key_list.txt --threads 20
+python3 main.py --object key --action delete --file key_list.txt --threads 10
 ```
 ### To delete IAM users
 ```bash
-python3 main.py --object user --action delete --file user_list.txt --threads 20
+python3 main.py --object user --action delete --file user_list.txt --threads 10
 ```
