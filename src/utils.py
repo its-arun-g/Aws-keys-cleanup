@@ -1,4 +1,5 @@
 import boto3
+import logging
 
 iam_client = boto3.client('iam')
 
@@ -10,3 +11,10 @@ def get_username_from_key(access_key):
     except Exception as e:
         print(f"Error fetching username for key {access_key}: {e}")
         return None
+    
+def get_logger() -> logging.Logger:
+    format = "%(asctime)s - %(levelname)s - %(filename)s - %(message)s"
+    logging.basicConfig(format=format)
+    logger = logging.getLogger("aws-keys-cleanup")
+    logger.setLevel("INFO")
+    return logger

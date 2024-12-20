@@ -1,6 +1,8 @@
 import boto3
+from src.utils import get_logger
 
 iam_client = boto3.client('iam')
+logger = get_logger()
 
 def delete_user(username):
     """Delete a single IAM user."""
@@ -12,9 +14,11 @@ def delete_user(username):
                 AccessKeyId=key['AccessKeyId'],
                 UserName=username
             )
-            print(f"Deleted access key {key['AccessKeyId']} for user {username}.")
+            logger.info(f"Deleted access key {key['AccessKeyId']} for user {username}.")
+            return
         # Delete the user
         iam_client.delete_user(UserName=username)
-        return f"Deleted user {username}."
+        logger.info(f"Deleted user {username}.")
     except Exception as e:
-        return f"Failed to delete user {username}: {e}"
+        logger.error(f"Failed to delete user {username}: {e}")
+    return

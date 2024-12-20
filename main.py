@@ -5,7 +5,6 @@ from src.user_manager import delete_user
 
 def process_items(items, action, object_type, max_threads=10):
     """Process keys or users concurrently."""
-    results = []
     with ThreadPoolExecutor(max_threads) as executor:
         if object_type == "key":
             if action == "disable":
@@ -18,8 +17,7 @@ def process_items(items, action, object_type, max_threads=10):
             raise ValueError(f"Unsupported object and action: {object_type}, {action}")
         
         for future in as_completed(futures):
-            results.append(future.result())
-    return results
+            future.result()
 
 def main():
     parser = argparse.ArgumentParser(description="Manage AWS access keys and users.")
@@ -29,7 +27,7 @@ def main():
     parser.add_argument("--threads", type=int, default=10, help="Number of threads to use for processing.")
     
     args = parser.parse_args()
-    
+    items = []
     try:
         with open(args.file, "r") as file:
             items = [line.strip() for line in file if line.strip()]
@@ -38,9 +36,7 @@ def main():
         return
     
     try:
-        results = process_items(items, args.action, args.object, max_threads=args.threads)
-        for result in results:
-            print(result)
+        process_items(items, args.action, args.object, max_threads=args.threads)
     except ValueError as e:
         print(f"Error: {e}")
 
