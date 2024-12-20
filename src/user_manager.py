@@ -15,7 +15,6 @@ def delete_user(username):
                 UserName=username
             )
             logger.info(f"Deleted access key {key['AccessKeyId']} for user {username}.")
-            return
         # Delete the user
         iam_client.delete_user(UserName=username)
         logger.info(f"Deleted user {username}.")
