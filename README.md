@@ -15,7 +15,8 @@ A Python script to manage AWS access keys and IAM users
    git clone https://github.com/Arun240726/Aws-keys-cleanup.git
 
 2. Run the below commands:
-   run:  |
+   run:  
+         |
           pip3 install poetry && \
           python3 -m virtualenv env/ && \
           source env/bin/activate && \
