@@ -1,7 +1,7 @@
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from key_manager  import disable_key, delete_key
-from user_manager import delete_user
+from src.key_manager  import disable_key, delete_key
+from src.user_manager import delete_user
 
 def process_items(items, action, object_type, max_threads=10):
     """Process keys or users concurrently."""
