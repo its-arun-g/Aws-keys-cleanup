@@ -5,7 +5,7 @@ from src.key_manager import disable_key, delete_key
 from src.user_manager import delete_user
 
 
-def process_items(items, action, object_type, profile, max_threads=10):
+def process_items(items, action, object_type, profile, max_threads=1):
     """Process keys or users concurrently."""
     with ThreadPoolExecutor(max_threads) as executor:
         if object_type == "key":
