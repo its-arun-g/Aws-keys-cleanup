@@ -21,7 +21,7 @@ A Python script to cleanup AWS access keys and IAM users in multiple accounts us
 
 3. Usage  
     ```bash
-    usage: main.py [-h] --object {key,user} --action {disable,delete} --files-path FILE_PATH --profile-name PROFILE [--threads THREADS]
+    usage: main.py [-h] --object {key,user} --action {disable,delete} --csv-file-path CSV_PATH --profile-name PROFILE [--threads THREADS]
 
     Manage AWS access keys and users.
 
@@ -30,21 +30,21 @@ A Python script to cleanup AWS access keys and IAM users in multiple accounts us
     --object {key,user}      The object to manage (key or user).
     --action {disable,delete}
                              The action to perform (disable or delete).
-    --profile-name           Profile name which is present for all required accounts
-    --files-path FILE_PATH   Path to multiple files with account_id as the file name containing access keys or usernames present in that account (newline-separated).
+    --profile-name           Profile name which is present for all required accounts.
+    --csv-file-path CSV_PATH Path to CSV file with account_id and resource.
     --threads THREADS        Number of threads to use for processing.
     ```
 
 
 ### To disable AWS access keys
 ```bash
-python3 main.py --object key --action disable --files-path key_list/ --profile-name AdministratorAccess
+python3 main.py --object key --action disable --csv-file-path resources.csv --profile-name AdministratorAccess
 ```
 ### To delete AWS access keys
 ```bash
-python3 main.py --object key --action delete --files-path key_list/ --profile-name AdministratorAccess
+python3 main.py --object key --action delete --csv-file-path resources.csv --profile-name AdministratorAccess
 ```
 ### To delete IAM users
 ```bash
-python3 main.py --object user --action delete --files-path user_list/ --profile-name AdministratorAccess
+python3 main.py --object user --action delete --csv-file-path resources.csv --profile-name AdministratorAccess
 ```
