@@ -3,20 +3,19 @@ from src.utils import get_username_from_key
 from src.utils import get_logger
 
 
-iam_client = boto3.client('iam')
-
 logger = get_logger()
 
-def disable_key(access_key):
+
+def disable_key(profile, access_key):
     """Disable a single AWS access key."""
-    username = get_username_from_key(access_key)
+    username = get_username_from_key(profile, access_key)
+    session = boto3.Session(profile_name=profile)
+    iam_client = session.client("iam")
     if not username:
-        return 
+        return
     try:
         iam_client.update_access_key(
-            AccessKeyId=access_key,
-            Status='Inactive',
-            UserName=username
+            AccessKeyId=access_key, Status="Inactive", UserName=username
         )
         logger.info(f"Disabled key {access_key} for user {username}.")
         return
@@ -24,16 +23,16 @@ def disable_key(access_key):
         logger.error(f"Failed to disable key {access_key}: {e}")
         return
 
-def delete_key(access_key):
+
+def delete_key(profile, access_key):
     """Delete a single AWS access key."""
-    username = get_username_from_key(access_key)
+    username = get_username_from_key(profile, access_key)
+    session = boto3.Session(profile_name=profile)
+    iam_client = session.client("iam")
     if not username:
         return
     try:
-        iam_client.delete_access_key(
-            AccessKeyId=access_key,
-            UserName=username
-        )
+        iam_client.delete_access_key(AccessKeyId=access_key, UserName=username)
         logger.info(f"Deleted key {access_key} for user {username}.")
         return
     except Exception as e:
