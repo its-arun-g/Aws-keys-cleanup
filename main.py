@@ -1,11 +1,13 @@
 import argparse
+import pandas as pd
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
 from src.key_manager import disable_key, delete_key
 from src.user_manager import delete_user
 
 
-def process_items(items, action, object_type, profile, max_threads=1):
+def process_items(items, action, object_type, profile, max_threads=10):
     """Process keys or users concurrently."""
     with ThreadPoolExecutor(max_threads) as executor:
         if object_type == "key":
@@ -45,10 +47,10 @@ def main():
         help="The action to perform (disable or delete).",
     )
     parser.add_argument(
-        "--files-path",
+        "--csv-file-path",
         type=str,
         required=True,
-        help="Path to the files containing access keys or usernames (newline-separated) with filename as account ID",
+        help="Path to the csv file containing account and object",
     )
     parser.add_argument(
         "--profile-name",
@@ -65,26 +67,22 @@ def main():
 
     args = parser.parse_args()
 
-    for root, _, files in os.walk(args.files_path):
-        for acc_file in files:
-            items = []
-            try:
-                with open(os.path.join(root, acc_file), "r") as file:
-                    items = [line.strip() for line in file if line.strip()]
-            except FileNotFoundError:
-                print(f"Error: File '{args.file}' not found.")
-                return
+    input_df = pd.read_csv(args.csv_file_path)
 
-            try:
-                process_items(
-                    items,
-                    args.action,
-                    args.object,
-                    f"{acc_file.split('.')[0]}:{args.profile_name}",
-                    max_threads=args.threads,
-                )
-            except ValueError as e:
-                print(f"Error: {e}")
+    distinct_accounts = input_df["account"].unique().tolist()
+
+    for account in distinct_accounts:
+        items = input_df[input_df["account"] == account]["object"].unique().tolist()
+        try:
+            process_items(
+                items,
+                args.action,
+                args.object,
+                f"{account}:{args.profile_name}",
+                max_threads=args.threads,
+            )
+        except ValueError as e:
+            print(f"Error: {e}")
 
 
 if __name__ == "__main__":
